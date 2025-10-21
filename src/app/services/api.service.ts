@@ -183,11 +183,7 @@ export class ApiService {
     return contact;
   }
 
-  // private simulateDelay(): Promise<void> {
-  //   return new Promise((resolve) => setTimeout(resolve, this.delay));
-  // }
-
   private simulateDelay(): Promise<void> {
-    return new Promise((resolve, reject) => setTimeout(resolve, 1000));
+    return new Promise((resolve) => setTimeout(resolve, this.delay));
   }
 }
