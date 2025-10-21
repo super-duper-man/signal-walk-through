@@ -1,4 +1,4 @@
-import { Component, computed, inject, resource, signal } from '@angular/core';
+import { Component, computed, effect, inject, resource, signal } from '@angular/core';
 import {
   MatList,
   MatListItem,
@@ -12,6 +12,7 @@ import { MatIcon } from '@angular/material/icon';
 import { Contact } from '../../models/contact.model';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from "@angular/router";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-contact-list-component',
@@ -60,14 +61,25 @@ export class ContactListComponent {
   deleting = signal<boolean>(false);
   loading = computed(() => this.contactsResource.isLoading() || this.deleting());
 
-  async deleteContact(id: string) {
+  private apiService = inject(ApiService);
+  contactsResource = resource<Contact[], unknown>({
+    loader: () => this.apiService.getContacts(),
+  });
+
+    async deleteContact(id: string) {
     this.deleting.set(true);
     await this.apiService.deleteContact(id);
     this.deleting.set(false);
     this.contactsResource.reload();
   }
-  private apiService = inject(ApiService);
-  contactsResource = resource<Contact[], unknown>({
-    loader: () => this.apiService.getContacts(),
-  });
+
+  snackBar = inject(MatSnackBar);
+
+  showError = effect(() => {
+    const error = this.contactsResource.error();
+    if(error){
+      this.deleting.set(false);
+      this.snackBar.open(error.message, 'Close', {verticalPosition: 'bottom'})
+    }
+  })
 }
