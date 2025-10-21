@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatToolbar, RouterLinkWithHref, MatIcon],
+  imports: [RouterOutlet, MatToolbar, RouterLinkWithHref, MatIcon, MatButtonModule],
   template: `
     <mat-toolbar
       >Welcome to {{ title() }}!
@@ -16,7 +17,7 @@ import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
     <router-outlet />
   `,
   styles: [
- `
+    `
       @use '@angular/material' as mat;
 
       mat-toolbar {
@@ -39,7 +40,7 @@ import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
       .container {
         position: relative;
       }
-    `
+    `,
   ],
 })
 export class App {
