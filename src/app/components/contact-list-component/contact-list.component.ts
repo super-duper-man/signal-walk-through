@@ -11,6 +11,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
 import { Contact } from '../../models/contact.model';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-contact-list-component',
@@ -23,7 +24,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatListItemMeta,
     MatButtonModule,
     MatIcon,
-  ],
+    RouterLink
+],
   template: `
     <mat-list>
       @for (contact of contactsResource.value(); track contact.id) {
@@ -31,6 +33,9 @@ import { MatButtonModule } from '@angular/material/button';
         <h3 matListItemTitle>{{ contact.name }}</h3>
         <p matListItemLine>{{ contact.email }}</p>
         <div matListItemMeta>
+           <button mat-icon-button routerLink="/edit/{{contact.id}}">
+            <mat-icon>edit</mat-icon>
+          </button>
           <button mat-icon-button (click)="deleteContact(contact.id)">
             <mat-icon>delete</mat-icon>
           </button>
