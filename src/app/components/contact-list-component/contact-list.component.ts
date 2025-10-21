@@ -1,4 +1,4 @@
-import { Component, inject, resource, signal } from '@angular/core';
+import { Component, computed, inject, resource, signal } from '@angular/core';
 import {
   MatList,
   MatListItem,
@@ -39,7 +39,7 @@ import { MatButtonModule } from '@angular/material/button';
       }
     </mat-list>
 
-    @if(contactsResource.isLoading()){
+    @if(loading()){
     <mat-progress-spinner mode="indeterminate" />
     }
   `,
@@ -52,15 +52,15 @@ import { MatButtonModule } from '@angular/material/button';
   ],
 })
 export class ContactListComponent {
-
   deleting = signal<boolean>(false);
+  loading = computed(() => this.contactsResource.isLoading() || this.deleting());
 
-async deleteContact(id: string) {
-  this.deleting.set(true);
-  await this.apiService.deleteContact(id);
-  this.deleting.set(false);
-  this.contactsResource.reload();
-}
+  async deleteContact(id: string) {
+    this.deleting.set(true);
+    await this.apiService.deleteContact(id);
+    this.deleting.set(false);
+    this.contactsResource.reload();
+  }
   private apiService = inject(ApiService);
   contactsResource = resource<Contact[], unknown>({
     loader: () => this.apiService.getContacts(),
